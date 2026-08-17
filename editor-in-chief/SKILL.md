@@ -1,409 +1,243 @@
 ---
 name: editor-in-chief
-description: "Use when a first draft is complete and all Phase 1 gates are
-  done: topic selected (seo-research), title approved (hooks), outline
-  approved (outline-generator), draft written (article-writer). Runs
-  autonomous diagnosis-prescribe-rewrite loop before Substack."
+description: "Run a diagnose-prescribe-rewrite loop on a finished first draft: articles, posts, newsletters, essays. Checks in with the author after every rewrite before continuing. Use when a draft is written and needs editing to publishable, not when you still need a topic, title, or outline. For a single evaluation pass with no rewrite use evaluate-content."
 ---
 
 # Editor-in-Chief
 
-You are the editor-in-chief. You don't blindly run every editing skill in sequence, you **diagnose first**, then **prescribe only what's needed**, and you **loop until the draft is ready**.
+You are the editor-in-chief. Diagnose first, prescribe only what's needed, loop until the draft is ready or stops improving.
 
-This skill replaces the old pipeline of: remove-chaff → show-dont-tell → emotion-amplifier → prosody-checker → reader-simulator → evaluate-content. Instead of 6 serial passes that overwrite each other and flatten voice, you run a diagnostic loop that applies targeted fixes.
-
----
+The point is to avoid running six editing passes in sequence, where each one overwrites the last and flattens the voice. Instead: one diagnosis, a short prescription, one consolidated rewrite per round.
 
 ## Quick Reference
 
-| Step | Action | Exit Condition |
+| Step | Action | Exit condition |
 |------|--------|----------------|
-| 1. Diagnose | Run evaluate-content in classification mode, assign STRONG/NEEDS WORK/WEAK per dimension | All 6 dimensions labeled |
-| 2. Prescribe | Pick skills for WEAK/NW dimensions only (max 3 per iteration) | Prescription list ready |
-| 3. Apply | Run prescribed skills in diagnostic mode, then ONE consolidated rewrite | Draft updated, change log written |
-| 4. Loop | Go back to Step 1 | All STRONG, or max 10 iterations reached |
-| 5. Reader-sim | Run reader-simulator as final gate | All 5 tests pass with no WEAK-equivalent findings |
-| 6. Deliver | Save draft-final.md and editor-log.md, write delivery summary | Done |
-
----
-
-## When to Use
-
-After Phase 1 (human-in-the-loop) is complete:
-- ✅ Topic selected (seo-research)
-- ✅ Title/subtitle approved by Eric (hooks)
-- ✅ Outline approved by Eric (outline-generator)
-- ✅ First draft written (article-writer)
-
-**All four must be complete before invoking this skill.** If any are missing, return to the appropriate Phase 1 skill first. Do not start the editing loop on a draft that hasn't cleared all four gates.
-
-The editor-in-chief takes the first draft and autonomously refines it.
+| 1. Diagnose | Classify six dimensions STRONG / NEEDS WORK / WEAK | All six labeled |
+| 2. Prescribe | Pick fixes for WEAK and NEEDS WORK only, max 3 | Prescription list ready |
+| 3. Apply | Read the prescribed references, then ONE consolidated rewrite | Draft updated, change log written |
+| 3b. Check in | Show the author the diff and the change log, wait for a reply | Author says continue, or gives direction |
+| 4. Loop | Back to Step 1 | Converged, stalled, author says stop, or 10 iterations |
+| 5. Reader-sim | `references/reader-simulator.md` as final gate | 5 tests pass |
+| 6. Deliver | Save final draft and log, write summary | Done |
 
 ## Inputs
 
-| Input | Source | Required |
-|-------|--------|----------|
-| Draft | `marketing/substack/drafts/[slug]/draft.md` | Yes |
-| Brand voice | `~/marketing/WRITING-STYLE.md` | Yes |
-| Approved title/subtitle | `marketing/substack/drafts/[slug]/hooks.md` | Yes |
-| Target reader | From outline or evaluate-content Q6 | Yes |
+| Input | Where it comes from | Required |
+|-------|---------------------|----------|
+| Draft | Path the user gives you | Yes |
+| Voice reference | A style guide, or 2-3 samples of the author's published writing | No, but Voice calls are unreliable without one |
+| Target reader | Ask the user, or infer from the draft | Yes |
+| Review mode | Ask: check in each round (default), or batch | Yes |
 
-## The Loop
+If no voice reference exists, say so once at the start and judge Voice off `references/humanizer-checklist.md` and the lint checklist instead. Do not claim Voice is STRONG against a fingerprint you never saw. Write "Voice: STRONG (no voice reference, judged against checklist only)".
 
-```
-                    ┌──────────────┐
-                    │  READ DRAFT  │
-                    └──────┬───────┘
-                           │
-                           ▼
-                    ┌──────────────┐
-                    │  DIAGNOSE    │  ← evaluate-content (classification mode)
-                    └──────┬───────┘
-                           │
-                    ┌──────┴──────┐
-                    │ ALL STRONG? │
-                    └──────┬──────┘
-                      no /   \ yes
-                        /     \
-                       ▼       ▼
-              ┌─────────────┐  ┌──────────────┐
-              │ PRESCRIBE & │  │ reader-sim   │ ← final gate
-              │ APPLY FIXES │  │ (once)       │
-              └──────┬──────┘  └──────┬───────┘
-                     │                │
-                     ▼                ▼
-               (loop back       ┌──────────┐
-                to DIAGNOSE)    │  DELIVER  │
-                                └──────────┘
-```
+Outputs go next to the draft: `draft-final.md` and `editor-log.md` in the same directory, unless the user says otherwise.
 
-**Max iterations: 10.** If the draft hasn't converged after 10 loops, deliver what you have with a status report explaining what's still weak and why.
+## Step 1: Diagnose
 
----
-
-## Step 1: Diagnose (evaluate-content: Classification Mode)
-
-Run evaluate-content on the draft, but instead of numeric scores, classify each dimension:
-
-### The Six Dimensions
-
-For each dimension, assign one label with a 1-2 sentence explanation:
+Classify each of six dimensions with one label and a 1-2 sentence reason.
 
 | Dimension | STRONG | NEEDS WORK | WEAK |
 |-----------|--------|------------|------|
-| **Shareability** | Has 2+ screenshot moments. Reader would forward to a friend. | Has potential but the hook/insight is buried or undersold. | Nothing surprising, new, or worth sharing. Generic. |
-| **Substance** | Every claim backed by data, examples, or stories. Specific. | Some sections show, others tell. Mix of evidence and assertions. | Vague claims. "Many users found this helpful." No proof. |
-| **Voice** | Sounds like Eric. Irregular rhythm, first-person, opinionated, specific. No dramatic contrast slop ("Every X is Y. This one isn't." / "It's not X, it's Y.") | Mostly human but has stiff patches, AI tells, or flat spots. | Robot cadence. Banned patterns present. Dramatic contrast templates. No personality. |
-| **Leanness** | Every sentence earns its place. Nothing to cut. | 10-20% filler. Some throat-clearing, restatement, or padding. | 30%+ chaff. Repeats ideas, wraps sections in bows, qualifies everything. |
-| **Emotion** | Driving emotion is clear and felt throughout. Builds. | Emotion exists but is buried or inconsistent across sections. | Flat. No emotional throughline. Reads like a report. |
-| **Rhythm** | Varied sentence lengths, good tempo shifts, strong energy arc. | Some monotone runs or tempo problems. Mostly reads well. | Drone. Same-length sentences. No punches. No breath. Flatline energy. |
+| **Shareability** | 2+ screenshot moments. Reader would forward it. | Hook or insight exists but buried. | Nothing surprising or worth sharing. |
+| **Substance** | Every claim backed by data, example, or story. | Some sections show, others tell. | Vague claims, no proof. |
+| **Voice** | Sounds like the author. Irregular rhythm, opinionated, specific. No dramatic contrast slop. | Mostly human, stiff patches or AI tells. | Robot cadence. Banned patterns present. |
+| **Leanness** | Every sentence earns its place. | 10-20% filler. | 30%+ chaff. |
+| **Emotion** | Driving emotion clear and felt throughout. | Emotion buried or inconsistent. | Flat. Reads like a report. |
+| **Rhythm** | Varied sentence length, tempo shifts, energy arc. | Some monotone runs. | Drone. No punches, no breath. |
 
-### Diagnosis Output Format
+Reader Fit is not a loop dimension. It is tested once at Step 5.
+
+If you run `evaluate-content` for this, use its Classification Mode and ignore its Reader Fit row until Step 5. `evaluate-content` has no Rhythm row; judge Rhythm from `references/prosody-checker.md`.
+
+### Output format
 
 ```
 ITERATION [N] DIAGNOSIS
-═══════════════════════
 
-Shareability:  [STRONG|NEEDS WORK|WEAK] — [explanation]
-Substance:     [STRONG|NEEDS WORK|WEAK] — [explanation]
-Voice:         [STRONG|NEEDS WORK|WEAK] — [explanation]
-Leanness:      [STRONG|NEEDS WORK|WEAK] — [explanation]
-Emotion:       [STRONG|NEEDS WORK|WEAK] — [explanation]
-Rhythm:        [STRONG|NEEDS WORK|WEAK] — [explanation]
+Shareability:  [STRONG|NEEDS WORK|WEAK] - [reason]
+Substance:     [STRONG|NEEDS WORK|WEAK] - [reason]
+Voice:         [STRONG|NEEDS WORK|WEAK] - [reason]
+Leanness:      [STRONG|NEEDS WORK|WEAK] - [reason]
+Emotion:       [STRONG|NEEDS WORK|WEAK] - [reason]
+Rhythm:        [STRONG|NEEDS WORK|WEAK] - [reason]
 
-PRESCRIPTION: [which skills to apply, or "READY — proceed to reader-sim"]
+PRESCRIPTION: [reference files to read, or "READY - proceed to reader-sim"]
 ```
-
----
 
 ## Step 2: Prescribe
 
-Based on the diagnosis, determine which skills to invoke. **Only invoke skills for dimensions classified as NEEDS WORK or WEAK.**
+Only prescribe for dimensions labeled NEEDS WORK or WEAK. Each maps to a reference file bundled with this skill.
 
-| Dimension | Skill to Apply | What It Does |
-|-----------|---------------|--------------|
-| Shareability WEAK/NW | `emotion-amplifier` | Find/amplify the hook and screenshot moments |
-| Substance WEAK/NW | `show-dont-tell` | Replace assertions with evidence |
-| Voice WEAK/NW | `references/humanizer-checklist.md` | Kill AI tells, add personality, vary structure |
-| Leanness WEAK/NW | `remove-chaff` | Cut filler, restatement, throat-clearing |
-| Emotion WEAK/NW | `emotion-amplifier` | Identify driving emotion, amplify peaks, fix dead zones |
-| Rhythm WEAK/NW | `prosody-checker` | Fix monotone runs, tempo problems, energy arc |
+| Dimension | Read this | What it does |
+|-----------|-----------|--------------|
+| Leanness | `references/remove-chaff.md` | Cut filler, throat-clearing, restatement |
+| Substance | `references/show-dont-tell.md` | Replace assertions with evidence |
+| Emotion or Shareability | `references/emotion-amplifier.md` | Find and amplify the driving emotion |
+| Voice | `references/humanizer-checklist.md`, then `references/ai-writing-patterns.md` | Kill AI tells, restore personality |
+| Rhythm | `references/prosody-checker.md` | Fix monotone runs, tempo, energy arc |
 
-### Prescription Rules
+Rules:
 
-1. **Never apply more than 3 skills in one iteration.** Prioritize WEAK over NEEDS WORK. If more than 3 dimensions need work, pick the 3 worst.
+1. Max 3 per iteration. WEAK outranks NEEDS WORK. If more than three need work, take the three worst.
+2. Apply order within a rewrite: cut first (remove-chaff), add evidence second (show-dont-tell), frame third (emotion-amplifier), polish rhythm last (prosody-checker). Voice fixes fold in anywhere.
+3. If a fix degraded a dimension that was STRONG, re-check it next round and be more conservative there.
 
-2. **Order within an iteration matters:**
-   - `remove-chaff` always runs FIRST if prescribed (cutting changes everything downstream)
-   - `show-dont-tell` runs SECOND (adding evidence before polishing)
-   - `emotion-amplifier` runs THIRD (emotional framing of existing content)
-   - `prosody-checker` runs LAST (rhythm is the final polish)
-   - Voice/humanizer can run at any point
+## Step 3: Apply
 
-3. **Don't re-prescribe a skill that was STRONG last round** unless a different fix degraded it. If substance was STRONG in iteration 2 but you ran remove-chaff in iteration 3 and cut some evidence, re-check substance.
+Read the prescribed reference files as diagnostics. Collect what each one says to change. Then apply everything in **one rewrite**.
 
----
+Do not rewrite once per reference file. Stacked rewrites overwrite each other's gains and flatten voice. That failure is the reason this skill exists.
 
-## Step 3: Apply Fixes (Single Consolidated Rewrite)
+- Preserve what is already STRONG. If voice is STRONG, leave the irregular rhythms alone.
+- Never invent a fact. If Substance is WEAK because the draft has no numbers, you cannot fix it by writing numbers. See Evidence Gaps below.
+- Track what changed.
 
-**Critical: Do NOT run each skill as a separate rewrite pass.** Instead:
-
-1. Run each prescribed skill in **diagnostic mode only**, collect their reports (what to cut, what to show, what to amplify, what to fix rhythmically).
-2. Read all the reports together.
-3. Apply ALL the fixes in **one consolidated rewrite** of the draft.
-
-This is the key difference from the old pipeline. One rewrite, informed by multiple diagnostics. Not six rewrites stacked on top of each other.
-
-### The Consolidated Rewrite Rules
-
-- **Preserve what's already STRONG.** If shareability is STRONG, don't touch the screenshot moments. If voice is STRONG, don't smooth out the irregular rhythms that make it human.
-- **Apply WRITING-STYLE.md as the ground truth.** When in doubt about voice, refer back to Eric's actual fingerprint.
-- **Track what you changed.** After the rewrite, note which paragraphs were modified and why. This helps the next diagnosis detect regressions.
-
-### Change Log Format
+### Change log format
 
 ```
 ITERATION [N] CHANGES
-═════════════════════
 
-Skills applied: [list]
+Applied: [reference files]
 
-Changes:
-- ¶3: Cut throat-clearing opener ("Now that we've established...") 
-- ¶5: Replaced "significantly improved" with "dropped from 4.2s to 0.8s"
-- ¶7-8: Combined into single paragraph, added one-liner punch after
-- ¶12: Amplified closing — replaced generic advice with "Mean reversion doesn't care about narratives."
+- P3: Cut throat-clearing opener
+- P5: Replaced "significantly improved" with "4.2s to 0.8s"
+- P7-8: Merged, added a one-line punch after
 
-Paragraphs preserved (STRONG, not touched): ¶1, ¶4, ¶9, ¶11
+Preserved (STRONG, untouched): P1, P4, P9
 ```
 
----
+### Evidence gaps
+
+Substance cannot converge on a draft with no facts in it. When a claim needs evidence the draft does not contain, do not invent it and do not loop on it. Replace the unsupported line with the tightest honest version, and mark the hole inline:
+
+```
+[EVIDENCE GAP: drop-off rate, which step, over what period. Not in the source draft.]
+```
+
+Then label Substance `WEAK (evidence gap)`. That label is terminal. It does not count against convergence and you never prescribe `show-dont-tell` for it again. List every gap in the delivery summary so the author can fill them.
+
+## Step 3b: Check in with the author
+
+Stop after every rewrite. Do not start the next iteration until the author replies.
+
+Show them, in this order:
+
+1. The iteration's diagnosis, six labels with reasons
+2. What you changed, as a real diff or a before/after of every paragraph you touched
+3. Any new evidence gaps
+4. What you plan to prescribe next round, and why
+
+Then ask one question: continue, change direction, or stop here.
+
+Handle the reply:
+
+- **Continue** - go to Step 4.
+- **Direction** ("keep the old opener", "too aggressive on the cuts", "this is not my voice") - revert what they rejected before the next rewrite, and treat their note as a standing constraint for every remaining iteration. Record it in the log. Never re-apply a rejected edit in a later round.
+- **Stop** - skip to Step 6 and deliver what exists.
+- **A rewritten passage of their own** - that text is now ground truth. Do not edit it further, and use it to calibrate Voice for the rest of the run.
+
+Two things this check-in is not. It is not a summary of what you are about to do; the rewrite is already applied and on disk. And it is not optional on a draft you think is going well.
+
+Batch mode: if the author says up front to run the whole loop unattended, skip the check-ins and say so in the delivery summary. Everything else is the same. This is the only way to skip Step 3b.
 
 ## Step 4: Loop
 
-After applying fixes, re-diagnose only the dimensions you touched plus any they
-plausibly affected. Do not re-read the whole draft from scratch each round.
+Re-diagnose the dimensions you touched plus any they plausibly affected.
 
-### Convergence
+Stop when any of these is true:
 
-The draft is ready when:
-- **All 6 dimensions are STRONG**, OR
-- **All dimensions are at least NEEDS WORK and none are WEAK**, AND you've done 3+ iterations (diminishing returns)
-- **Max 10 iterations reached**, deliver with status report
+- The author said stop at a Step 3b check-in
+- All six are STRONG, or STRONG except `WEAK (evidence gap)`
+- Nothing is WEAK, and three or more iterations are done
+- A dimension has oscillated between the same two labels twice. That is convergence, not progress
+- 10 iterations
 
-### Regression Detection
+If you stop without converging, deliver anyway with a status report naming what is still weak, why, and what the author would have to supply to fix it. A structural problem needs a human, not another loop.
 
-If a dimension that was STRONG drops to NEEDS WORK or WEAK after a fix:
-1. Note the regression in the change log
-2. Prioritize fixing it in the next iteration
-3. Be more conservative with that dimension going forward
+## Step 5: Final gate
 
-### Iteration Budget
+Read `references/reader-simulator.md` and run it as the target reader: 8-second test, skim test, so-what test, screenshot test, subscribe test. This is where Reader Fit gets judged.
 
-- Iterations 1-3: Aggressive fixes. Address all WEAK dimensions.
-- Iterations 4-6: Targeted polish. Address remaining NEEDS WORK.
-- Iterations 7-10: Light touch only. If it's not converging, it might be a structural issue that needs human input. Flag it.
-
----
-
-## Step 5: Final Gate (reader-simulator)
-
-Once all dimensions are STRONG (or you've hit diminishing returns), run `reader-simulator` as the final quality gate:
-
-- Define the target reader (from the outline or evaluate-content Q6)
-- Read the draft as that reader
-- Identify screenshot moments, skim zones, bounce points
-- Run the five tests (8-second, skim, so-what, screenshot, subscribe)
-
-### If reader-sim finds issues:
-
-Map findings back to the STRONG/NEEDS WORK/WEAK rubric:
-
-- **NEEDS WORK equivalent** (1-2 skim zones, minor friction): Fix in one final pass, no need to re-enter the loop.
-- **WEAK equivalent** (bounce points, failed 8-second test, failed subscribe test, no screenshot moments): Go back to Step 1 for one more diagnosis cycle. If the same dimension fails again after that cycle, flag it for Eric with a specific explanation rather than looping indefinitely.
-
----
+- Minor friction, 1-2 skim zones: fix in one final pass, do not re-enter the loop.
+- Bounce points, or a failed 8-second or subscribe test: one more diagnosis cycle, maximum. If it fails the same way twice, flag it for the author and stop.
 
 ## Step 6: Deliver
 
-Save the finished draft and produce a summary:
-
-### Delivery Output
-
 ```
 EDITOR-IN-CHIEF: DRAFT COMPLETE
-════════════════════════════════
 
-Article: [title]
 Iterations: [N]
-Final classifications:
-  Shareability:  STRONG — [one-liner]
-  Substance:     STRONG — [one-liner]  
-  Voice:         STRONG — [one-liner]
-  Leanness:      STRONG — [one-liner]
-  Emotion:       STRONG — [one-liner]
-  Rhythm:        STRONG — [one-liner]
+Shareability:  [label] - [one line]
+Substance:     [label] - [one line]
+Voice:         [label] - [one line]
+Leanness:      [label] - [one line]
+Emotion:       [label] - [one line]
+Rhythm:        [label] - [one line]
 
-Reader simulation: [PASS/ISSUES]
-  Screenshot moments: [count]
-  Skim zones: [count]  
-  Bounce points: [count]
+Reader simulation: [PASS | ISSUES: what]
+Word count: [before] -> [after]
+Check-ins: [N] (or "batch mode, none")
+Author constraints applied: [list, or none]
 
-Word count: [original] → [final] ([% change])
+Evidence gaps the author must fill:
+- [gap 1]
+- [gap 2]
 
-Draft saved to: marketing/substack/drafts/[slug]/draft-final.md
-Iteration log: marketing/substack/drafts/[slug]/editor-log.md
-
-Ready for Eric's review.
+Saved: draft-final.md
+Log: editor-log.md
 ```
 
-If max iterations hit without full convergence:
+If you stopped early, replace the header with `DRAFT DELIVERED (NOT CONVERGED)` and add a line per unconverged dimension saying what the author needs to change.
 
-```
-EDITOR-IN-CHIEF: DRAFT DELIVERED (NOT FULLY CONVERGED)
-══════════════════════════════════════════════════════
+## Lint Checklist
 
-Article: [title]
-Iterations: 10 (max reached)
-Final classifications:
-  Shareability:  STRONG
-  Substance:     STRONG
-  Voice:         NEEDS WORK — [explanation of what's still off]
-  Leanness:      STRONG
-  Emotion:       STRONG
-  Rhythm:        NEEDS WORK — [explanation]
+Run this on every iteration's output, not just the final draft.
 
-Unconverged dimensions need human input:
-- Voice: [specific suggestion for what Eric could adjust]
-- Rhythm: [specific suggestion]
+- [ ] No em dashes. Use a comma, a period, or a colon instead
+- [ ] No reversal pivots: "It's not X, it's Y", "This isn't about X. It's about Y", "The real story is Y"
+- [ ] No filler transitions: "At its core", "In today's world", "That said", "Let's explore", "Ultimately", "It's important to note"
+- [ ] No therapeutic language: "I hear you", "Give yourself grace"
+- [ ] No meta commentary: "In this essay", "This piece explores", "We will discuss", "Here are the key takeaways"
+- [ ] No five or more consecutive sentences within 5 words of the same length
+- [ ] No padded three-part lists. Two real items means list two
+- [ ] No fake insider framing: "What they don't tell you", "The real secret is", "Most people get this wrong"
 
-Draft saved to: marketing/substack/drafts/[slug]/draft-final.md
-Iteration log: marketing/substack/drafts/[slug]/editor-log.md
-```
+## Self-Check
 
----
+Your own diagnoses and suggested rewrites pass the same lint. Beyond that:
 
-## Files
-
-The editor-in-chief maintains these files during the process:
-
-| File | Purpose |
-|------|---------|
-| `marketing/substack/drafts/[slug]/draft.md` | Working draft (updated each iteration) |
-| `marketing/substack/drafts/[slug]/draft-final.md` | Final output |
-| `marketing/substack/drafts/[slug]/editor-log.md` | Full iteration log (all diagnoses + change logs) |
-
----
-
-## Lint Checklist (Final Gate)
-
-Before declaring any iteration's rewrite complete, run this checklist. Any failure means the rewrite isn't done.
-
-- [ ] No em dashes (", " or "--") anywhere in the text
-- [ ] No reversal pivot patterns ("It's not X, it's Y" / "This isn't about X. It's about Y." / "The real story is Y.")
-- [ ] No filler transitions from the banned list ("At its core", "In today's world", "That said", "Let's explore", "Ultimately", "It's important to note")
-- [ ] No therapeutic/validating language ("I hear you", "Give yourself grace")
-- [ ] No meta writing commentary ("In this essay", "This piece explores", "We will discuss", "Here are the key takeaways")
-- [ ] No five or more consecutive sentences of similar length (±5 words). If found, vary them.
-- [ ] No decorative three-part lists. Every item in a list earns its spot. Two items? List two. Don't pad to three for rhythm.
-- [ ] No fake insider framing ("The part nobody talks about..." / "What they don't tell you..." / "The real secret is..." / "Most people miss this..." / "Here's what most people get wrong..."). Just say the thing directly.
-
-This checklist runs on every iteration's output, not just the final draft. Catching these early prevents them from compounding.
-
-## Self-Check (Before Outputting Diagnoses and Rewrites)
-
-Your own output, diagnoses, prescribed rewrites, example sentences, must pass the same standards you apply to drafts. Before delivering any iteration output:
-
-- Scan suggested rewrites for kill phrases. No fake insider framing, no formulaic contrast, no throat-clearing in your own examples.
-- Any rewrite you suggest must be grounded in the article's actual content, specific names, numbers, events. Generic "improved" versions that could apply to any article are not improvements.
-- If your rewrite example is vaguer than the original, cut it. Show a real alternative or say what's needed without demonstrating it badly.
-
----
+- Every rewrite you suggest must be grounded in this draft's actual content. A "better" version that would fit any article is not an improvement.
+- If your rewrite is vaguer than the original, cut it. Say what is needed rather than demonstrating it badly.
 
 ## Common Mistakes
 
-These are the failure modes agents hit most often when running this skill:
-
-1. **Running all 6 skills regardless of diagnosis.** The whole point of this skill is targeted application. If Substance is STRONG, `show-dont-tell` should never run. Check the diagnosis first, every time.
-
-2. **Applying skills as separate sequential rewrites.** Running `remove-chaff`, then `show-dont-tell`, then `emotion-amplifier` as three separate rewrite passes causes each pass to overwrite gains from the previous one. Always collect diagnostic reports from each skill, then apply all fixes in one consolidated rewrite.
-
-3. **Invoking the skill before Phase 1 is complete.** Starting the editing loop on a partial draft or one without an approved title means iterating toward the wrong target. All four Phase 1 gates must be done.
-
-4. **Touching paragraphs already classified STRONG.** If a dimension is STRONG, the sections driving that classification should not change. Conservative edits in adjacent areas can accidentally degrade what was working.
-
-5. **Forgetting the change log.** Without tracking which paragraphs changed and why, regression detection is guesswork. Write the change log every iteration.
-
-6. **Oscillating on the same dimension for 4+ iterations.** If a dimension keeps bouncing between NEEDS WORK and STRONG, that's convergence. Stop and move on. Don't keep prescribing the same skill for marginal gains.
-
-7. **Applying Voice fixes without reading `references/humanizer-checklist.md`.** The humanizer checklist is the primary reference for Voice WEAK/NW. Running generic edits without it misses specific AI-tell patterns.
-
----
-
-## Anti-Patterns
-
-**❌ DO NOT:**
-- Run all 6 editing skills on every iteration regardless of diagnosis
-- Apply skills as separate sequential rewrites (the old pipeline)
-- Rewrite paragraphs that are already STRONG
-- Keep looping if the same dimension oscillates between NEEDS WORK and STRONG (that's convergence, stop)
-- Ignore regressions, if you broke something, fix it before moving on
-
-**✅ DO:**
-- Diagnose before prescribing, always
-- Apply fixes in one consolidated rewrite per iteration
-- Preserve what works, protect STRONG dimensions
-- Track every change for regression detection
-- Deliver honestly, if it's not converging, say so and explain why
-
----
-
-## Example Iteration Flow
-
-```
-Iteration 1:
-  Diagnose → Shareability: NEEDS WORK, Substance: WEAK, Voice: NEEDS WORK, 
-             Leanness: WEAK, Emotion: NEEDS WORK, Rhythm: STRONG
-  Prescribe → remove-chaff (leanness), show-dont-tell (substance), emotion-amplifier (emotion)
-  Apply → consolidated rewrite, 23% of text cut, 4 assertions replaced with data, 
-          emotional hook moved to opening
-
-Iteration 2:
-  Diagnose → Shareability: STRONG, Substance: STRONG, Voice: NEEDS WORK,
-             Leanness: STRONG, Emotion: STRONG, Rhythm: NEEDS WORK
-  Prescribe → humanizer checklist (voice), prosody-checker (rhythm)
-  Apply → consolidated rewrite, killed 3 AI tells, varied sentence structure in §2-3,
-          added one-liner punches after dense paragraphs
-
-Iteration 3:
-  Diagnose → All STRONG
-  Prescribe → READY — proceed to reader-sim
-  Reader-sim → 3 screenshot moments, 1 minor skim zone in §4, all 5 tests pass
-  Fix → tightened §4 transition
-  Deliver → draft-final.md saved, 3 iterations, ready for Eric
-```
-
----
+1. **Running every reference regardless of diagnosis.** If Substance is STRONG, `show-dont-tell` never opens.
+2. **Separate rewrite per reference.** Collect diagnostics, then rewrite once.
+3. **Editing paragraphs already classified STRONG.** Conservative edits nearby still degrade what was working.
+4. **Inventing a statistic to clear a Substance WEAK.** Mark the gap instead.
+5. **Skipping the change log.** Without it, regression detection is guesswork.
+6. **Looping on an oscillating dimension.** Bouncing between two labels is convergence. Stop.
+7. **Calling Voice STRONG with no voice reference.** Say what you judged against.
+8. **Running iterations back to back without checking in.** Step 3b is a hard stop unless the author asked for batch mode.
+9. **Re-applying an edit the author rejected.** Their note is a constraint for the rest of the run, not feedback on one round.
 
 ## Reference Files
 
-When a dimension needs work, read the corresponding reference file for detailed instructions:
-
-| File | Editing Pass | When to Use |
-|------|-------------|-------------|
-| `references/remove-chaff.md` | Cut filler, throat-clearing, redundancy | Leanness WEAK/NW |
-| `references/show-dont-tell.md` | Replace assertions with evidence, data, stories | Substance WEAK/NW |
-| `references/emotion-amplifier.md` | Identify and intensify driving emotion | Emotion or Shareability WEAK/NW |
-| `references/prosody-checker.md` | Fix sentence rhythm, tempo, energy arc | Rhythm WEAK/NW |
-| `references/reader-simulator.md` | Simulate target reader (skim, bounce, screenshot tests) | Final gate before delivery |
-| `references/visualize-scene.md` | Brainstorm image concepts via famous directors/designers | When images needed |
-| `references/ai-writing-patterns.md` | 24 AI writing tells with before/after examples (Wikipedia AI Cleanup) | Voice WEAK/NW, general AI-tell detection |
-| `references/humanizer-checklist.md` | 24-pattern checklist for removing AI writing tells | Voice WEAK/NW, primary checklist |
+| File | Use when |
+|------|----------|
+| `references/remove-chaff.md` | Leanness WEAK/NW |
+| `references/show-dont-tell.md` | Substance WEAK/NW |
+| `references/emotion-amplifier.md` | Emotion or Shareability WEAK/NW |
+| `references/prosody-checker.md` | Rhythm WEAK/NW |
+| `references/humanizer-checklist.md` | Voice WEAK/NW, primary |
+| `references/ai-writing-patterns.md` | Voice WEAK/NW, 24 AI tells with before/after |
+| `references/reader-simulator.md` | Step 5 only |
+| `references/visualize-scene.md` | The author asks for image concepts |
 
 ## Related Skills
 
-- **evaluate-content**, classification diagnostics (used in Step 1)
-- **article-writer**, humanizer checklist (used for Voice fixes)
-- `~/marketing/WRITING-STYLE.md`, ground truth for voice
-- **Phase 1** (upstream): `seo-research`, `hooks`, `outline-generator`
-- **Phase 3** (downstream): `substack-draft`, `typefully`, `tweet-ideas`
+- `evaluate-content` for a diagnosis with no rewrite
+- `writer` for drafting from scratch
+- `hooks` for the title and subtitle

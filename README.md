@@ -6,7 +6,7 @@ Skills for writing, editing, and judging content. For Claude Code, Hermes Agent,
 
 - **writer** — draft or revise articles, posts, tweets, marketing copy, landing pages. Enforces kill phrases.
 - **evaluate-content** — judge a draft before it ships: shareability, readability, voice, cuttability, angle.
-- **editor-in-chief** — autonomous diagnose, prescribe, rewrite loop on a finished first draft.
+- **editor-in-chief** — diagnose, prescribe, rewrite loop on a finished first draft. Checks in with you after every pass.
 - **hooks** — headlines, titles, subject lines, thread openers, landing page headers.
 - **technical-writing** — docs, runbooks, error messages, plans, PR descriptions.
 - **document-restructure** — reorganize a document into new sections without changing one sentence.

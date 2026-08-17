@@ -183,6 +183,8 @@ When invoked by the editor-in-chief skill, use **classification labels** instead
 | Q5 (Unique angle?) | Emotion | Driving emotion clear and felt throughout | Emotion exists but buried or inconsistent | Flat, no emotional throughline |
 | Q6 (Target reader?) | Reader Fit | Clear reader profile, article directly serves them | General audience, not specific enough | Nobody in particular |
 
+Note: editor-in-chief uses the first five rows plus its own Rhythm dimension, and defers Reader Fit to its final reader-simulator gate.
+
 Output format for classification mode:
 ```
 Shareability:  [STRONG|NEEDS WORK|WEAK]: [1-2 sentence explanation with specific examples]

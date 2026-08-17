@@ -31,7 +31,7 @@ S7: 4  █████
 ```
 
 **What to look for:**
-- **Monotone runs**: 3+ sentences in a row within ±5 words of each other = robot cadence. **5+ consecutive similar-length sentences is an automatic fail.** Fix by splitting a long one or combining two short ones.
+- **Monotone runs**: 5+ sentences in a row within 5 words of each other = robot cadence (same threshold as the SKILL.md lint). **5+ consecutive similar-length sentences is an automatic fail.** Fix by splitting a long one or combining two short ones.
 - **Missing punches**: No sentences under 6 words in a section = no emphasis. Short sentences hit hard. Use them.
 - **Missing breath**: No sentences over 20 words in a section = staccato fatigue. Longer sentences give the reader space to settle in before the next punch.
 - **Vary aggressively**: The ideal pattern is irregular. Long-short-medium-short-long-short. Like jazz, not a metronome. If you can swap two adjacent sentences and nobody would notice, the rhythm is too uniform.
@@ -123,7 +123,9 @@ The ultimate prosody test. Read the piece aloud (or imagine reading it) and mark
 - Where you naturally speed up (good — the writing has pull)
 - Where you naturally slow down (good if intentional for emphasis, bad if boring)
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Prosody Report: [article title]
@@ -170,6 +172,5 @@ The ultimate prosody test. Read the piece aloud (or imagine reading it) and mark
 
 ## References
 
-- Part of **article-writer** revision pipeline (optional, for polish)
 - Run after **remove-chaff** (chaff removal changes the rhythm)
 - Complements **emotion-amplifier** (pacing serves emotion)

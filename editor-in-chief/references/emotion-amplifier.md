@@ -9,7 +9,7 @@ Every piece of content that works has a driving emotion. Find it. Then turn it u
 
 ## The Three Emotions That Drive Action
 
-From John Rush / hooks skill:
+From John Rush:
 1. **Frustration** — "I'm done with this crap." Call out what's broken.
 2. **Relief** — "This finally fixed it." Promise the solution.
 3. **Pride** — "I feel like myself again." Make them feel smart for reading.
@@ -66,7 +66,9 @@ Every article needs at least one moment of honesty that makes the author human:
 
 If the draft has zero vulnerability, it reads like a press release.
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Emotion Report: [article title]
@@ -99,6 +101,4 @@ If the draft has zero vulnerability, it reads like a press release.
 
 ## References
 
-- Part of **article-writer** revision pipeline
 - Run after **show-dont-tell**, before **reader-simulator**
-- Shares emotion framework with **hooks** and **evaluate-content**

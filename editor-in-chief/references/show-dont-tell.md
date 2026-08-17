@@ -40,7 +40,9 @@ Go section by section. For every claim or assertion, ask: "Am I telling or showi
 - Uses passive voice to hide the actor ("It was discovered that...")
 - Describes an outcome without the specific result
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Show Don't Tell Report: [article title]
@@ -63,5 +65,4 @@ Go section by section. For every claim or assertion, ask: "Am I telling or showi
 
 ## References
 
-- Part of **article-writer** revision pipeline
 - Run after **remove-chaff**, before **emotion-amplifier**

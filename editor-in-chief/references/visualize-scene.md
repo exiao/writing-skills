@@ -69,7 +69,9 @@ Pick the best vision (or combine elements from multiple) and produce:
 - Alt text for SEO
 - Placement recommendation (above fold, inline, full-width)
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Visual Scene: [passage summary]
@@ -124,5 +126,4 @@ A hand-drawn circular chart where energy's 3.3% is a thin sliver, with small ann
 ## References
 
 - Feeds into **image-generator** (provides the image brief)
-- Used during **article-writer** drafting or revision
 - Can also be used standalone for social media visuals

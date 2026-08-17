@@ -12,6 +12,8 @@ Skills for writing, editing, and judging content. For Claude Code, Hermes Agent,
 ## Related
 
 - [blader/humanizer](https://github.com/blader/humanizer) — strips AI-isms out of text. Pairs well with `editor-in-chief`.
+- [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) — removes 20+ patterns of AI slop from any piece of writing.
+- [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) — 48 marketing skills including copywriting and copy-editing.
 
 ## Install
 

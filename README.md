@@ -1,5 +1,7 @@
 # writing-skills
 
+![Skills for writing, editing, and judging content](.github/assets/hero.png)
+
 Skills for writing, editing, and judging content. For Claude Code, Hermes Agent, Codex, and other skill-aware agents.
 
 - **writer** — draft or revise articles, posts, tweets, marketing copy, landing pages. Enforces kill phrases.

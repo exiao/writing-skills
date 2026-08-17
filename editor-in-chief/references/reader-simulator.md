@@ -11,7 +11,7 @@ Get inside your reader's head. Read the draft as *them*, not as the author. Find
 
 ### Step 1 — Define the Reader
 
-Use the target reader from **evaluate-content** question #6, or define one now:
+Use the target reader the editor-in-chief established at Step 1, or define one now:
 - **Who:** [one sentence description — age, role, situation]
 - **Trigger:** [what happened that made them need this article]
 - **What they'd Google:** [the search query that led them here]
@@ -61,7 +61,9 @@ After reading the closing, would the target reader subscribe for more?
 - Does the ending make them feel smarter, more confident, or more curious?
 - Or does it fizzle into "hope you found this helpful"?
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Reader Simulation: [article title]
@@ -105,6 +107,3 @@ After reading the closing, would the target reader subscribe for more?
 
 ## References
 
-- Part of **article-writer** revision pipeline
-- Run after **emotion-amplifier**, before **evaluate-content**
-- Uses target reader from **evaluate-content** question #6

@@ -27,7 +27,7 @@ The point is to avoid running six editing passes in sequence, where each one ove
 |-------|---------------------|----------|
 | Draft | Path the user gives you | Yes |
 | Voice reference | A style guide, or 2-3 samples of the author's published writing | No, but Voice calls are unreliable without one |
-| Target reader | Ask the user, or infer from the draft | Yes |
+| Target reader | Ask the author. In batch mode, infer it from the draft and state your inference | Yes |
 | Review mode | Ask: check in each round (default), or batch | Yes |
 
 If no voice reference exists, say so once at the start and judge Voice off `references/humanizer-checklist.md` and the lint checklist instead. Do not claim Voice is STRONG against a fingerprint you never saw. Write "Voice: STRONG (no voice reference, judged against checklist only)".
@@ -73,20 +73,22 @@ Only prescribe for dimensions labeled NEEDS WORK or WEAK. Each maps to a referen
 | Dimension | Read this | What it does |
 |-----------|-----------|--------------|
 | Leanness | `references/remove-chaff.md` | Cut filler, throat-clearing, restatement |
-| Substance | `references/show-dont-tell.md` | Replace assertions with evidence |
+| Substance | `references/show-dont-tell.md` | Replace assertions with evidence. Skip it if the draft contains no facts to promote: that is an evidence gap, not a fixable weakness |
 | Emotion or Shareability | `references/emotion-amplifier.md` | Find and amplify the driving emotion |
-| Voice | `references/humanizer-checklist.md`, then `references/ai-writing-patterns.md` | Kill AI tells, restore personality |
+| Voice | `references/humanizer-checklist.md` | Kill AI tells, restore personality |
 | Rhythm | `references/prosody-checker.md` | Fix monotone runs, tempo, energy arc |
 
 Rules:
 
-1. Max 3 per iteration. WEAK outranks NEEDS WORK. If more than three need work, take the three worst.
+1. Max 3 dimensions per iteration, not 3 files. WEAK outranks NEEDS WORK. If more than three need work, take the three worst.
 2. Apply order within a rewrite: cut first (remove-chaff), add evidence second (show-dont-tell), frame third (emotion-amplifier), polish rhythm last (prosody-checker). Voice fixes fold in anywhere.
 3. If a fix degraded a dimension that was STRONG, re-check it next round and be more conservative there.
 
 ## Step 3: Apply
 
 Read the prescribed reference files as diagnostics. Collect what each one says to change. Then apply everything in **one rewrite**.
+
+Some reference files carry an Output Format section for standalone use. Ignore it. You want their findings, not their reports.
 
 Do not rewrite once per reference file. Stacked rewrites overwrite each other's gains and flatten voice. That failure is the reason this skill exists.
 
@@ -231,8 +233,7 @@ Your own diagnoses and suggested rewrites pass the same lint. Beyond that:
 | `references/show-dont-tell.md` | Substance WEAK/NW |
 | `references/emotion-amplifier.md` | Emotion or Shareability WEAK/NW |
 | `references/prosody-checker.md` | Rhythm WEAK/NW |
-| `references/humanizer-checklist.md` | Voice WEAK/NW, primary |
-| `references/ai-writing-patterns.md` | Voice WEAK/NW, 24 AI tells with before/after |
+| `references/humanizer-checklist.md` | Voice WEAK/NW |
 | `references/reader-simulator.md` | Step 5 only |
 | `references/visualize-scene.md` | The author asks for image concepts |
 

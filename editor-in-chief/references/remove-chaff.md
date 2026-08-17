@@ -49,7 +49,9 @@ Every "very", "really", "quite", "extremely", "incredibly", "significantly" is a
 - ❌ "Additionally," / "Furthermore," / "Moreover,"
 - ✅ Just start the sentence. If the logic flows, you don't need a signpost.
 
-## Output Format
+## Output Format (standalone use only)
+
+When editor-in-chief prescribes this file, skip this section. It wants findings, not a report.
 
 ```markdown
 ## Chaff Report: [article title]
@@ -72,5 +74,4 @@ Every "very", "really", "quite", "extremely", "incredibly", "significantly" is a
 
 ## References
 
-- Part of **article-writer** revision pipeline
 - Run before **show-dont-tell**
